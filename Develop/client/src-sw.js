@@ -4,6 +4,7 @@ const { registerRoute } = require('workbox-routing');
 const { CacheableResponsePlugin } = require('workbox-cacheable-response');
 const { ExpirationPlugin } = require('workbox-expiration');
 const { precacheAndRoute } = require('workbox-precaching/precacheAndRoute');
+const { ReadableStreamBYOBRequest } = require('stream/web');
 
 precacheAndRoute(self.__WB_MANIFEST);
 
@@ -27,4 +28,11 @@ warmStrategyCache({
 registerRoute(({ request }) => request.mode === 'navigate', pageCache);
 
 // TODO: Implement asset caching
-registerRoute();
+registerRoute(({ request}) => request.destination === 'image',
+new CacheFirst({
+  cacheName: 'asset-cache',
+plugins: [
+  new CacheableResponsePlugin({
+    statuses: [0, 200],
+  }),
+]}));

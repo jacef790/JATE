@@ -1,4 +1,4 @@
-import res from 'express/lib/response';
+// import res from 'express/lib/response';
 import { openDB } from 'idb';
 
 const initdb = async () =>
@@ -18,9 +18,9 @@ export const putDb = async (content) => {
   const jateDb = await openDB('jate', 1);
   const tx = jateDb.transaction('jate', 'rewrite');
   const store = tx.objectStore('jate');
-  const req = store.put({id: 1, value: content})
-  const res = await req;
-  console.log('Saved to database', res)
+  const request = store.put({id: 1, value: content})
+  const result = await request;
+  console.log('Saved to database', result)
 
 }
 
@@ -29,11 +29,11 @@ export const getDb = async () => {
   const jateDb = await openDB('jate', 1);
   const tx = jateDb.transaction('jate', 'readonly');
   const store = tx.objectStore('jate');
-  const req = store.get(1);
-  const res = await req
-  console.log('Data received from database', res);
-  if(res) {
-    return res.text;
+  const request = store.get(1);
+  const result = await request
+  console.log('Data received from database', result);
+  if(result) {
+    return result.text;
   } else{
     return;
   }
